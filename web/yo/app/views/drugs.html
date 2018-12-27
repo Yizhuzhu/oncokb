@@ -1,0 +1,56 @@
+<div class="drugsPage">
+    <h3 class="headerStyle">Curated Therapeutics</h3>
+    <div ng-if="drugList!==undefined">
+        <table class="table" datatable="ng" dt-options="dtOptions" dt-columns="dtColumns">
+            <thead>
+            <tr class="dashedHeader">
+                <th>Therapeutic</th>
+                <th>NCI Thesaurus Code</th>
+                <th>Description</th>
+                <th>Genes</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr data-ng-repeat="drug in drugList">
+                <td ng-init="editDrugName=false">
+                    <div ng-show="editDrugName===false">
+                        <button type="button" class="btn btn-warning buttonStyle " uib-tooltip-placement="top"
+                                uib-tooltip="Modify Name" ng-click="editDrugName=!editDrugName"><i
+                            class="fa fa-edit"></i>
+                        </button>
+                        {{ drug.drugName}}
+                    </div>
+                    <div ng-show="editDrugName===true">
+                        <button type="button" class="btn btn-success buttonStyle" uib-tooltip-placement="top"
+                                uib-tooltip="Save Name"
+                                ng-click="saveDrugName(newDrugName, drug);editDrugName=!editDrugName"><i
+                            class="fa fa-check"></i>
+                        </button>
+                        <input type="text" ng-model="newDrugName" placeholder="{{drug.drugName}}"
+                               uib-typeahead="name for name in drug.synonyms" typeahead-min-length="0"/>
+                    </div>
+                </td>
+                <td>{{ drug.ncitCode }}</td>
+                <td>{{ drug.description }}</td>
+                <td>
+                    <div ng-repeat="gene in drugMap[drug.uuid]" uib-tooltip-placement="top"
+                         uib-tooltip="{{gene.mutationNumber}} mutation(s): {{gene.mutationInfo}}"><a
+                        ng-href="{{gene.geneLink}}">{{gene.geneName}}</a></div>
+                </td>
+                <td>
+                    <button type="button" class="buttonStyle btn btn-danger" ng-click="removeDrug(drug)"
+                            uib-tooltip-placement="top" uib-tooltip="Delete Drug"><i class="fa fa-trash"></i></button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div ng-if="drugList===undefined">
+        <p class="errorReminderXL">The page is unavailable now.</p>
+    </div>
+    <div>
+        <search-add-drug></search-add-drug>
+    </div>
+</div>
+

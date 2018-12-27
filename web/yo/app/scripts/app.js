@@ -47,7 +47,8 @@ var oncokbApp = angular.module('oncokbApp', [
     'datatables.bootstrap',
     'ui.sortable',
     'firebase',
-    'daterangepicker'
+    'daterangepicker',
+    'ngTagsInput'
 ])
     .value('OncoKB', OncoKB)
     // This is used for typeahead
@@ -92,6 +93,10 @@ var oncokbApp = angular.module('oncokbApp', [
             })
             .when('/queues', {
                 templateUrl: 'views/queues.html'
+            })
+            .when('/drugs', {
+                templateUrl: 'views/drugs.html',
+                controller: 'DrugsCtrl'
             })
             .otherwise({
                 redirectTo: '/genes'

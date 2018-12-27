@@ -884,6 +884,88 @@ input[type=radio]:checked + label:before, input[type=checkbox]:checked + label:b
     }
 }
 
+.drugsPage {
+    .headerStyle {
+        margin-bottom: 30px;
+    }
+
+    .table {
+        .buttonStyle {
+            padding: 5px;
+            font-size: 15px;
+            line-height: 15px;
+            i {
+                width: 15px;
+                height: 15px;
+            }
+        }
+    }
+
+    table > tbody > tr > td, table > thead > tr > th {
+        padding: 12px;
+    }
+
+    .table > tbody > tr > td {
+        word-wrap: break-word;
+    }
+
+    .errorReminderXL {
+        font-size: 24px;
+        color: red;
+    }
+}
+
+.searchAddDrug {
+    .searchbox {
+        width: 500px;
+        margin-right: 20px;
+    }
+
+    .errorReminder {
+        font-size: 15px;
+        color: red;
+    }
+
+    .basicName {
+        color: black;
+        font-size: 15px;
+    }
+
+    .alsoKnownAs {
+        display: inline;
+        color: grey;
+        font-size: 13px;
+        font-style: italic;
+    }
+    .drugsDropdown {
+        width: 100%;
+    }
+    .preferNameDropdown {
+        width: 500px;
+        margin-top: 10px;
+    }
+}
+
+.modifyTherapy {
+    .flexRow {
+        display: flex;
+        flex-direction: row;
+    }
+    .inputDrugs {
+        flex-grow: 1;
+        flex-basis: 70%;
+    }
+    .addButton {
+        border: 0px;
+        flex-grow: 0;
+        font-size: 20px;
+    }
+    .errorNote {
+        color: red;
+        float: left;
+    }
+}
+
 .invalidPubIframe {
     color: red !important;
 }
