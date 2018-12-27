@@ -1,44 +1,56 @@
 'use strict';
 
 angular.module('oncokbApp')
-    .controller('DrugsCtrl', ['$window', '$scope', '$rootScope', '$location', '$timeout', '$routeParams', '_', 'DTColumnDefBuilder', 'DTOptionsBuilder', 'DatabaseConnector',
-        function($window, $scope, $rootScope, $location, $timeout, $routeParams, _, DTColumnDefBuilder, DTOptionsBuilder, DatabaseConnector) {
-
-            function getDrugList() {
-                DatabaseConnector.getAllDrugs()
-                    .then(function(result){
-                        $scope.drugList = result;
-                    })
+    .controller('DrugsCtrl', ['$window', '$scope', '$location', '$timeout', '$routeParams', '_', 'DTColumnDefBuilder', 'DTOptionsBuilder', '$firebaseObject', '$firebaseArray', 'FirebaseModel', '$q', 'dialogs', 'mainUtils',
+        function ($window, $scope, $location, $timeout, $routeParams, _, DTColumnDefBuilder, DTOptionsBuilder, $firebaseObject, $firebaseArray, FirebaseModel, $q, dialogs, mainUtils) {
+            function loadDrugTable() {
+                var deferred1 = $q.defer();
+                $firebaseObject(firebase.database().ref("Drugs/")).$bindTo($scope, "drugList").then(function () {
+                    deferred1.resolve();
+                }, function (error) {
+                    deferred1.reject(error);
+                });
             };
-            getDrugList();
+            loadDrugTable();
 
-            $scope.processSearchDrugs = function(keyword) {
-                return DatabaseConnector.searchDrugs(keyword)
-                    .then(
-                        function(result) {
-                            $scope.searchDrugsError = false;
-                            return result;
-                        })
-                    .catch(
-                        function (error) {
-                            $scope.searchDrugsError = true;
-                        }
-                    )
+            function hasSameName(newDrugName, uuid) {
+                return _.some(mainUtils.getKeysWithoutFirebasePrefix($scope.drugList), (key) => ($scope.drugList[key].uuid !== uuid && (newDrugName === $scope.drugList[key].drugName || $scope.drugList[key].synonyms !== undefined && $scope.drugList[key].synonyms.indexOf(newDrugName) > -1)) === true);
             };
 
-            $scope.saveDrugName = function (drug,newDrugName) {
-                //To do; API
-                if ((!(newDrugName === "" || newDrugName === null)) && (newDrugName !== drug.drugName)){
-                    if (_.contains(drug.synonyms, drug.drugName)){
-                        drug.drugName = newDrugName;
-                    }else{
-                        drug.synonyms.push(drug.drugName);
-                        drug.drugName = newDrugName;
-                    }
+            function modalError(errorTitle, errorMessage, deleteDrug, drug) {
+                var dlgfortherapy = dialogs.create('views/modalError.html', 'ModalErrorCtrl', {
+                        errorTitle: errorTitle,
+                        errorMessage: errorMessage,
+                        deleteDrug: deleteDrug,
+                        drug: drug
+                    },
+                    {
+                        size: 'sm'
+                    });
+            };
+
+            $scope.saveDrugName = function (newDrugName, drug) {
+                if (hasSameName(newDrugName, drug.uuid)) {
+                    modalError("Sorry", "Same name exists.", false, drug);
+                } else {
+                    if (!newDrugName)
+                        newDrugName = drug.drugName;
+                    firebase.database().ref('Drugs/' + drug.uuid + '/drugName').set(newDrugName);
                 }
             };
-            $scope.addDrug = function (suggestedDrug) {
-                //To do; API
-            }
         }]
-    );
+    )
+    .controller('ModalErrorCtrl', function ($scope, $modalInstance, data) {
+        $scope.errorTitle = data.errorTitle;
+        $scope.errorMessage = data.errorMessage;
+        $scope.deleteDrug = data.deleteDrug;
+        $scope.cancel = function () {
+            $modalInstance.dismiss('canceled');
+        };
+        $scope.confirm = function () {
+            firebase.database().ref('Drugs/' + data.drug.uuid).set(null);
+            $modalInstance.dismiss('canceled');
+        }
+    });
+
+
