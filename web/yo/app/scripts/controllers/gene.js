@@ -1781,6 +1781,7 @@ angular.module('oncokbApp')
                     });
                 } else {
                     var treatmentRef = $scope.gene.mutations[indices[0]].tumors[indices[1]].TIs[indices[2]].treatments[indices[3]];
+                    var name_uuid = $scope.gene.mutations[indices[0]].tumors[indices[1]].TIs[indices[2]].treatments[indices[3]].name_uuid;
                     var dlgfortherapy = dialogs.create('views/modifyTherapy.html', 'ModifyTherapyCtrl', {
                         path: path,
                         tumorRef: tumorRef,
@@ -1790,7 +1791,9 @@ angular.module('oncokbApp')
                         mutationName: mutationName,
                         cancerTypes: cancerTypes,
                         modifymode: true,
-                        drugList: drugList
+                        drugList: drugList,
+                        indices: indices,
+                        name_uuid: name_uuid
                     }, {
                         size: 'lg'
                     });
@@ -1866,6 +1869,29 @@ angular.module('oncokbApp')
             $scope.getLastReviewedCancerTypesName = function (tumor) {
                 return mainUtils.getCancerTypesName(tumor.cancerTypes_review.lastReviewed);
             };
+
+            $scope.removeTherapyInMap = function (keys, therapyUuid, indices) {
+                var geneName = $scope.gene.name;
+                var mutationName = $scope.gene.mutations[indices[0]].name;
+                var cancerTypes = $scope.gene.mutations[indices[0]].tumors[indices[1]].cancerTypes;
+                _.each(keys, function (drug) {
+                    _.each(cancerTypes, function (cancerType) {
+                        if (cancerType.code != '') {
+                            firebase.database().ref('Map/' + drug + '/' + geneName + '/' + mutationName + '/' + cancerType.code).child(therapyUuid).remove().then(function (result) {
+                            }).catch(function (error) {
+                                console.log(error);
+                            });
+                        }
+                        else {
+                            firebase.database().ref('Map/' + drug + '/' + geneName + '/' + mutationName + '/' + cancerType.mainType).child(therapyUuid).remove().then(function (result) {
+                            }).catch(function (error) {
+                                console.log(error);
+                            });
+                        }
+                    });
+                });
+            }
+
             $scope.remove = function (type, path) {
                 $scope.status.processing = true;
                 var deletionMessage = 'Are you sure you want to delete this entry?';
@@ -1873,7 +1899,6 @@ angular.module('oncokbApp')
                 var obj = '';
                 var uuid = '';
                 var indices = getIndexByPath(path);
-                var drugUuids = '';
                 if (type === 'mutation') {
                     obj = $scope.gene.mutations[indices[0]];
                     uuid = $scope.gene.mutations[indices[0]].name_uuid;
@@ -1883,16 +1908,6 @@ angular.module('oncokbApp')
                 } else if (type === 'treatment') {
                     obj = $scope.gene.mutations[indices[0]].tumors[indices[1]].TIs[indices[2]].treatments[indices[3]];
                     uuid = $scope.gene.mutations[indices[0]].tumors[indices[1]].TIs[indices[2]].treatments[indices[3]].name_uuid;
-                    //Map should be changed. More code here
-                    drugUuids = $scope.gene.mutations[indices[0]].tumors[indices[1]].TIs[indices[2]].treatments[indices[3]].name;
-                    drugUuids = drugUuids.replace(" + ", " ");
-                    drugUuids = drugUuids.replace(", ", " ");
-                    var keys = new Array();
-                    if(drugUuids != undefined)
-                        keys = drugUuids.split(" ");
-                    var geneName = $scope.gene.name;
-                    var mutationUuid = $scope.gene.mutations[indices[0]].name_uuid;
-                    var cancerTypes = $scope.gene.mutations[indices[0]].tumors[indices[1]].cancerTypes;
                 }
                 if (type === 'tumor') {
                     if (obj.cancerTypes_review && obj.cancerTypes_review.added) {
@@ -1909,7 +1924,14 @@ angular.module('oncokbApp')
                     if (directlyRemove) {
                         var uuids = collectUUIDs(type, obj, []);
                         if(type === 'treatment'){
-                            //Map should be changed. More code here
+                            var drugUuids = '';
+                            drugUuids = $scope.gene.mutations[indices[0]].tumors[indices[1]].TIs[indices[2]].treatments[indices[3]].name;
+                            drugUuids = drugUuids.replace(" + ", " ");
+                            drugUuids = drugUuids.replace(", ", " ");
+                            var keys = new Array();
+                            if(drugUuids != undefined)
+                                keys = drugUuids.split(" ");
+                            $scope.removeTherapyInMap(keys, uuid, indices);
                         }
                         removeModel({ type: type, path: path, uuids: uuids });
 
@@ -3040,6 +3062,7 @@ angular.module('oncokbApp')
         $scope.addTherapyError = false;
         $scope.drugList = data.drugList;
         var therapyUuid = new Array();
+        var initTherapyUuid = new Array();
         if (data.modifymode === true) {
             $scope.therapy = new Array();
             initTherapy();
@@ -3067,6 +3090,7 @@ angular.module('oncokbApp')
                     for (var j = 0, arr = []; j < newTherapy[i].length; j++) {
                         tem.push(druglist[newTherapy[i][j]]);
                         temuuid.push(druglist[newTherapy[i][j]].uuid);
+                        initTherapyUuid.push(druglist[newTherapy[i][j]].uuid);
                     }
                     $scope.therapy[i] = {tags: tem};
                     therapyUuid[i] = temuuid;
@@ -3160,13 +3184,12 @@ angular.module('oncokbApp')
         }
 
         $scope.save = function () {
+            var therapyString = [];
+            var indices = data.indices;
             for (; therapyUuid[therapyUuid.length - 1] == '';) {
                 $scope.therapy.splice($scope.therapy.length - 1, 1);
                 therapyUuid.splice(therapyUuid.length - 1, 1);
             }
-            ;
-            var therapyString = [];
-            var indices = data.indices;
             _.each(therapyUuid, function (element) {
                 element = element.join(' + ').trim();
                 therapyString.push(element);
@@ -3178,6 +3201,11 @@ angular.module('oncokbApp')
                 updateTime: new Date().getTime(),
                 added: true
             };
+            if (data.modifymode === true) {
+                treatment.name_uuid = data.name_uuid;
+                $scope.$$prevSibling.removeTherapyInMap(initTherapyUuid, treatment.name_uuid, indices);
+
+            }
             _.each(therapyUuid, function (element) {
                 _.each(element, function (drug) {
                     _.each(data.cancerTypes, function (cancerType) {
@@ -3210,7 +3238,6 @@ angular.module('oncokbApp')
         $scope.cancel = function () {
             $modalInstance.dismiss('canceled');
         };
-
     })
 
     .controller('ModifyTumorTypeCtrl', function ($scope, $modalInstance, data, _, OncoKB, $rootScope, mainUtils, FirebaseModel, $timeout) {
