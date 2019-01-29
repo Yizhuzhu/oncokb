@@ -552,6 +552,9 @@ angular.module('oncokbApp')
                 currentReviewer: ''
             };
         }
+        function Setting() {
+            this.enableReview = true;
+        }
         function Drug(drugName, ncitCode, synonyms, ncitName){
             this.drugName = drugName;
             this.ncitCode = ncitCode;
@@ -570,6 +573,7 @@ angular.module('oncokbApp')
             VUSItem: VUSItem,
             TimeStamp: TimeStamp,
             Meta: Meta,
+            Setting: Setting,
             Drug: Drug
         };
     }]);
