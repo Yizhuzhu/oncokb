@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('oncokbApp')
-    .controller('DrugsCtrl', ['$window', '$scope', '$location', '$timeout', '$routeParams', '_', 'DTColumnDefBuilder', 'DTOptionsBuilder', '$firebaseObject', '$firebaseArray', 'FirebaseModel', '$q', 'dialogs', 'mainUtils',
-        function ($window, $scope, $location, $timeout, $routeParams, _, DTColumnDefBuilder, DTOptionsBuilder, $firebaseObject, $firebaseArray, FirebaseModel, $q, dialogs, mainUtils) {
+    .controller('DrugsCtrl', ['$window', '$scope', '$location', '$timeout', '$routeParams', '_', 'DTColumnDefBuilder', 'DTOptionsBuilder', '$firebaseObject', '$firebaseArray', 'FirebaseModel', 'firebaseConnector', '$q', 'dialogs', 'mainUtils',
+        function ($window, $scope, $location, $timeout, $routeParams, _, DTColumnDefBuilder, DTOptionsBuilder, $firebaseObject, $firebaseArray, FirebaseModel, firebaseConnector, $q, dialogs, mainUtils) {
             function loadDrugTable() {
                 var deferred1 = $q.defer();
-                $firebaseObject(firebase.database().ref("Drugs/")).$bindTo($scope, "drugList").then(function () {
+                $firebaseObject(firebaseConnector.ref("Drugs/")).$bindTo($scope, "drugList").then(function () {
                     deferred1.resolve();
                 }, function (error) {
                     deferred1.reject(error);
@@ -35,7 +35,7 @@ angular.module('oncokbApp')
                 } else {
                     if (!newDrugName)
                         newDrugName = drug.drugName;
-                    firebase.database().ref('Drugs/' + drug.uuid + '/drugName').set(newDrugName);
+                    firebaseConnector.set('Drugs/' + drug.uuid + '/drugName', newDrugName);
                 }
             };
         }]
@@ -48,7 +48,7 @@ angular.module('oncokbApp')
             $modalInstance.dismiss('canceled');
         };
         $scope.confirm = function () {
-            firebase.database().ref('Drugs/' + data.drug.uuid).set(null);
+            firebaseConnector.set('Drugs/' + data.drug.uuid, null);
             $modalInstance.dismiss('canceled');
         }
     });

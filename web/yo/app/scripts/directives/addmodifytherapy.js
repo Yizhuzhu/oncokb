@@ -1,6 +1,6 @@
 'use strict';
 angular.module('oncokbApp')
-    .directive('addModifyTherapy', function ($rootScope, DatabaseConnector, _, $q, FirebaseModel, mainUtils, $window) {
+    .directive('addModifyTherapy', function ($rootScope, DatabaseConnector, _, $q, FirebaseModel, firebaseConnector, mainUtils, $window) {
         return {
             templateUrl: 'views/addModifyTherapy.html',
             restrict: 'E',
@@ -9,7 +9,7 @@ angular.module('oncokbApp')
                 var therapyUuid = [];
                 function getDrugList() {
                     var defer = $q.defer();
-                    firebase.database().ref('Drugs').on('value', function (snapshot) {
+                    firebaseConnector.ref('Drugs').on('value', function (snapshot) {
                         $scope.drugList = [];
                         $scope.drugList = snapshot.val();
                         drugs = _.map(mainUtils.getKeysWithoutFirebasePrefix($scope.drugList), function (key) {return $scope.drugList[key];});
@@ -155,7 +155,7 @@ angular.module('oncokbApp')
                                 added: true
                             };
                             if (!$scope.gene.mutations[indices[0]].tumors[indices[1]].TIs[indices[2]].treatments) {
-                                firebase.database().ref($scope.path + "/treatments/0").set(treatment);
+                                firebaseConnector.set($scope.path + "/treatments/0", treatment);
                             }
                             else {
                                 $scope.gene.mutations[indices[0]].tumors[indices[1]].TIs[indices[2]].treatments.push(treatment);

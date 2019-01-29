@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('oncokbApp')
-    .directive('searchAddDrug', function (DatabaseConnector, dialogs, _, mainUtils, $q, FirebaseModel) {
+    .directive('searchAddDrug', function (DatabaseConnector, dialogs, _, mainUtils, $q, FirebaseModel, firebaseConnector) {
         return {
             templateUrl: 'views/searchAddDrug.html',
             restrict: 'E',
@@ -14,13 +14,13 @@ angular.module('oncokbApp')
                     var deferred = $q.defer();
                     if (($scope.drugList === undefined) || (checkSameDrug(drugName, ncitCode) === false)) {
                         var drug = new FirebaseModel.Drug(drugName, ncitCode, synonyms, ncitName);
-                        firebase.database().ref('Drugs/' + drug.uuid).set(drug).then(function (result) {
+                        firebaseConnector.addDrug(drug.uuid, drug).then(function (result) {
                             deferred.resolve();
+                            $scope.addDrugMessage = drugName + " has been added successfully.";
                         }, function (error) {
-                            dialogs.notify('Warning', 'Failed to create the drug ' + drugName + '! Please contact developers.');
+                            $scope.addDrugMessage = 'Failed to create the drug ' + drugName + '! Please contact developers.';
                             deferred.reject(error);
                         });
-                        $scope.addDrugMessage = drugName + " has been added successfully.";
                     }
                     else {
                         $scope.addDrugMessage = "Sorry, same drug exists.";
