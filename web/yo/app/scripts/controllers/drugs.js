@@ -31,7 +31,8 @@ angular.module('oncokbApp')
                 }, function (error) {
                     deferred2.reject(error);
                 });
-                var bindingAPI = [deferred1.promise, deferred2.promise];
+                // var bindingAPI = [deferred1.promise, deferred2.promise];
+                var bindingAPI = deferred1.promise;
                 $q.all(bindingAPI)
                     .then(function (result) {
                     }, function (error) {

@@ -1948,6 +1948,73 @@ angular.module('oncokbApp')
                 }
             }
 
+            function updateTherapyCombination(){
+                var name = "";
+                var array = [];
+                var deferred1 = $q.defer();
+                $firebaseObject(firebaseConnector.ref("Genes/")).$bindTo($scope, "genes").then(function () {
+                    deferred1.resolve();
+                }, function (error) {
+                    deferred1.reject(error);
+                });
+                var deferred2 = $q.defer();
+                $firebaseObject(firebaseConnector.ref("Drugs/")).$bindTo($scope, "drugList").then(function () {
+                    deferred2.resolve();
+                }, function (error) {
+                    deferred2.reject(error);
+                });
+                var bindingAPI = [deferred1.promise, deferred2.promise];
+                var stack = [];
+                $q.all(bindingAPI).then(function () {
+                    deferred1.resolve();
+                    _.each(mainUtils.getKeysWithoutFirebasePrefix($scope.genes), hugoSymbol=> {
+                        _.each(mainUtils.getKeysWithoutFirebasePrefix($scope.genes[hugoSymbol].mutations), mutationIndex=> {
+                            _.each(mainUtils.getKeysWithoutFirebasePrefix($scope.genes[hugoSymbol].mutations[mutationIndex].tumors), tumorTypeIndex => {
+                                _.each(mainUtils.getKeysWithoutFirebasePrefix($scope.genes[hugoSymbol].mutations[mutationIndex].tumors[tumorTypeIndex].TIs), tiIndex => {
+                                    _.each(mainUtils.getKeysWithoutFirebasePrefix($scope.genes[hugoSymbol].mutations[mutationIndex].tumors[tumorTypeIndex].TIs[tiIndex].treatments), treatmentIndex => {
+                                        name = $scope.genes[hugoSymbol].mutations[mutationIndex].tumors[tumorTypeIndex].TIs[tiIndex].treatments[treatmentIndex].name;
+                                        array = name.split(",").map(function(element){
+                                            return element.trim().split(" + ");
+                                        });
+                                        var uuidCombination =  _.map(array, function(subArray){
+                                            return _.map(subArray, function(name){
+                                                return findDrugUuid(name);
+                                            }).join(" + ");
+                                        }).join((", "));
+                                        //$scope.genes[hugoSymbol].mutations[mutationIndex].tumors[tumorTypeIndex].TIs[tiIndex].treatments[treatmentIndex].name = uuidCombination;
+                                    })
+                                })
+                            })
+                        })
+                    });
+                }, function (error) {
+                    deferred1.reject(error);
+                });
+
+            }
+            //updateTherapyCombination();
+
+
+            function findDrugUuid(name){
+                var result;
+                _.each(mainUtils.getKeysWithoutFirebasePrefix($scope.drugList), uuid=> {
+                    if($scope.drugList[uuid].drugName.toLowerCase() == name.toLowerCase())
+                    {
+                        result = uuid;
+                        return;
+                    }
+                    else {
+                        _.each(_.keys($scope.drugList[uuid].synonyms), synonymsIndex => {
+                            if($scope.drugList[uuid].synonyms[synonymsIndex].toLowerCase() === name.toLowerCase()){
+                                result = uuid;
+                                return;
+                            }
+                        })
+                    }
+                });
+                return result;
+            }
+
             $scope.remove = function (type, path) {
                 $scope.status.processing = true;
                 var deletionMessage = 'Are you sure you want to delete this entry?';
