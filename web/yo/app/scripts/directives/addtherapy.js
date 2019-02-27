@@ -7,6 +7,8 @@ angular.module('oncokbApp')
             controller: function ($scope) {
                 var drugs = [];
                 var therapyUuid = [];
+                var newTherapy = [];
+                var oldContent='';
                 function getDrugList() {
                     var defer = $q.defer();
                     firebaseConnector.ref('Drugs').on('value', function (snapshot) {
@@ -46,7 +48,7 @@ angular.module('oncokbApp')
                 }
 
                 function initTherapy() {
-                    var newTherapy = [];
+                    oldContent = $scope.treatmentRef.name;
                     newTherapy = mainUtils.therapyStrToArr($scope.treatmentRef.name);
                     for (var i = 0; i < newTherapy.length; i++) {
                         $scope.therapy.push([]);
@@ -127,6 +129,8 @@ angular.module('oncokbApp')
                     return isValid;
                 }
 
+
+
                 $scope.save = function () {
                     therapyUuid = _.filter(therapyUuid, function (item) {
                         return item != ''
@@ -139,10 +143,27 @@ angular.module('oncokbApp')
                     var newTreatmentName = therapyString.join(', ');
                     if (isValidTreatment(indices, newTreatmentName)) {
                         therapyUuid = _.flatten(therapyUuid);
+                        var therapyObject = {};
                         if ($scope.modifyMode === true) {
                             $scope.gene.mutations[indices[0]].tumors[indices[1]].TIs[indices[2]].treatments[indices[3]].name = newTreatmentName;
                             var name_uuid = $scope.gene.mutations[indices[0]].tumors[indices[1]].TIs[indices[2]].treatments[indices[3]].name_uuid;
                             mainUtils.setUUIDInReview(name_uuid);
+                            therapyObject = {
+                                'name': newTreatmentName,
+                                'status': 'latest'
+                            }
+                            newTherapy = _.flatten(newTherapy);
+                            $scope.$$prevSibling.changeMapByCurator('name', 'treatment', $scope.path, name_uuid, newTreatmentName, oldContent);
+                            // $scope.$$prevSibling.editMap('removeLatest', $scope.path, name_uuid, newTherapy);
+                            // $scope.$$prevSibling.editMap('saveLatest', $scope.path, name_uuid, therapyUuid, therapyObject);
+                            //$scope.$$prevSibling.editMapBeforeReview($scope.path, name_uuid, newTherapy, therapyUuid, therapyObject);
+                            // if ($scope.$$prevSibling.checkTherapyLatestStatus($scope.path, name_uuid, newTherapy[0])){
+                            //     $scope.$$prevSibling.editMap('removeLatest', $scope.path, name_uuid, newTherapy);
+                            //     $scope.$$prevSibling.editMap('save', $scope.path, name_uuid, therapyUuid, therapyObject);
+                            // }
+                            // else{
+                            //     $scope.$$prevSibling.editMap('save', $scope.path, name_uuid, therapyUuid, therapyObject);
+                            // }
                             $scope.$$prevSibling.indicateTumorContent($scope.tumorRef);
                             $scope.closeWindow();
                         }
@@ -159,6 +180,12 @@ angular.module('oncokbApp')
                             else {
                                 $scope.gene.mutations[indices[0]].tumors[indices[1]].TIs[indices[2]].treatments.push(treatment);
                             }
+                            // therapyObject = {
+                            //     'name': treatment.name,
+                            //     'status': 'latest'
+                            // }
+                            //$scope.editMap('save', $scope.path, treatment.name_uuid, therapyUuid, therapyObject);
+                            $scope.changeMapByCurator('add', 'treatment', $scope.path, treatment.name_uuid, treatment.name);
                             $scope.indicateTumorContent($scope.tumorRef);
                             mainUtils.setUUIDInReview(treatment.name_uuid);
                         }
