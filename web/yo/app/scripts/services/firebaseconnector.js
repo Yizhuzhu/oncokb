@@ -62,6 +62,9 @@ angular.module('oncokbApp')
         function setMap(path, name){
             return set('Map/' + path, name);
         }
+        function getMap(path){
+            return once('Map/' + path);
+        }
         function removeMap(path){
             return remove('Map/' + path);
         }
@@ -87,6 +90,7 @@ angular.module('oncokbApp')
             removeDrug: removeDrug,
             addTreatment: addTreatment,
             setMap: setMap,
+            getMap: getMap,
             removeMap: removeMap,
             createSetting: createSetting,
             addAttributeInSetting: addAttributeInSetting,
