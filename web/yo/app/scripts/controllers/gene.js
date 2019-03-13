@@ -1990,30 +1990,33 @@ angular.module('oncokbApp')
                                         var therapyUuids = [];
                                         var uuidCombination =  _.map(array, function(subArray){
                                             return _.map(subArray, function(name){
+                                                if(findDrugUuid(name) == undefined){
+                                                    console.log(name);
+                                                };
                                                 therapyUuids.push(findDrugUuid(name));
                                                 return findDrugUuid(name);
                                             }).join(" + ");
                                         }).join((", "));
-                                        var geneName = $scope.genes[hugoSymbol].name;
-                                        var mutationUuid = $scope.genes[hugoSymbol].mutations[mutationIndex].name_uuid;
-                                        var mutationName = $scope.genes[hugoSymbol].mutations[mutationIndex].name;
-                                        var cancerTypes = $scope.genes[hugoSymbol].mutations[mutationIndex].tumors[tumorTypeIndex].cancerTypes;
-                                        var therapyUuid = $scope.genes[hugoSymbol].mutations[mutationIndex].tumors[tumorTypeIndex].TIs[tiIndex].treatments[treatmentIndex].name_uuid;
-                                        var mapPath;
-                                            _.each(therapyUuids, function (drug) {
-                                                _.each(cancerTypes, function (cancerType) {
-                                                    if (cancerType.code != "") {
-                                                        mapPath = drug + '/' + geneName + '/' + mutationUuid + '/cancerTypes/' + cancerType.code + '/' + therapyUuid;
-                                                        firebaseConnector.setMap(mapPath, uuidCombination);
-                                                    }
-                                                    else {
-                                                        mapPath = drug + '/' + geneName + '/' + mutationUuid + '/cancerTypes/' + cancerType.mainType + '/' + therapyUuid;
-                                                        firebaseConnector.setMap(mapPath, uuidCombination);
-                                                    }
-                                                    mapPath = drug + '/' + geneName + '/' + mutationUuid + '/mutationName';
-                                                    firebaseConnector.setMap(mapPath, mutationName);
-                                                });
-                                            });
+                                        // var geneName = $scope.genes[hugoSymbol].name;
+                                        // var mutationUuid = $scope.genes[hugoSymbol].mutations[mutationIndex].name_uuid;
+                                        // var mutationName = $scope.genes[hugoSymbol].mutations[mutationIndex].name;
+                                        // var cancerTypes = $scope.genes[hugoSymbol].mutations[mutationIndex].tumors[tumorTypeIndex].cancerTypes;
+                                        // var therapyUuid = $scope.genes[hugoSymbol].mutations[mutationIndex].tumors[tumorTypeIndex].TIs[tiIndex].treatments[treatmentIndex].name_uuid;
+                                        // var mapPath;
+                                        //     _.each(therapyUuids, function (drug) {
+                                        //         _.each(cancerTypes, function (cancerType) {
+                                        //             if (cancerType.code != "") {
+                                        //                 mapPath = drug + '/' + geneName + '/' + mutationUuid + '/cancerTypes/' + cancerType.code + '/' + therapyUuid;
+                                        //                 firebaseConnector.setMap(mapPath, uuidCombination);
+                                        //             }
+                                        //             else {
+                                        //                 mapPath = drug + '/' + geneName + '/' + mutationUuid + '/cancerTypes/' + cancerType.mainType + '/' + therapyUuid;
+                                        //                 firebaseConnector.setMap(mapPath, uuidCombination);
+                                        //             }
+                                        //             mapPath = drug + '/' + geneName + '/' + mutationUuid + '/mutationName';
+                                        //             firebaseConnector.setMap(mapPath, mutationName);
+                                        //         });
+                                        //     });
                                         //$scope.genes[hugoSymbol].mutations[mutationIndex].tumors[tumorTypeIndex].TIs[tiIndex].treatments[treatmentIndex].name = uuidCombination;
                                     })
                                 })
@@ -2025,7 +2028,7 @@ angular.module('oncokbApp')
                 });
 
             }
-            updateTherapyCombination();
+            //updateTherapyCombination();
 
 
             function findDrugUuid(name){
