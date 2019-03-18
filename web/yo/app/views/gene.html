@@ -270,7 +270,7 @@
                             <div ng-click="toggleSection(treatment.name_uuid)"><i ng-class="getAngleClass(treatment.name_uuid)"></i> Therapy:</div>
                               <div style="margin-left:90px;margin-top:-22px;overflow: hidden">
                                   <div ng-style="getNameStyle()">
-                                      <realtime-string t="'TREATMENT_NAME'" key="'name'" path="path"
+                                      <realtime-string t="'TREATMENT_NAME'" key="'name'" path="path" drug-list="drugList"
                                                        uuid="getUUID({type: 'treatment', key: 'name', path: path})"></realtime-string>
                                   </div>
                                   <div style="float:left;margin-left:10px;" ng-show="!reviewMode">

@@ -21,7 +21,8 @@ angular.module('oncokbApp')
                 mutation: '=',
                 tumor: '=',
                 indicateMutationContentInGene: '&indicateMutationContent',
-                indicateTumorContentInGene: '&indicateTumorContent'
+                indicateTumorContentInGene: '&indicateTumorContent',
+                drugList:'='
             },
             replace: true,
             link: {
@@ -177,7 +178,11 @@ angular.module('oncokbApp')
                     mainUtils.updateMovingFlag(false);
                 };
                 $scope.uuidtoName = function(key){
-                    return mainUtils.drugUuidtoName(key, $scope.$parent.drugList);
+                    // if deletion：
+                    //      display scope.data[key + '_review']
+                    // else if add:
+                    //      display scope.data[key]
+                    return mainUtils.drugUuidtoName(key, $scope.drugList);
                 }
                 $scope.initializeFE = function() {
                     if ($scope.data[$scope.key+'_editing']) {
