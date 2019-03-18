@@ -52,7 +52,7 @@ angular.module('oncokbApp')
                         // For 'add' operation, there is only 'new' content. For 'delete' operation, there is only 'old' content.
                         switch($scope.panelType) {
                             case 'update':
-                                 $scope.accept();
+                                $scope.accept();
                                 break;
                             case 'name':
                                 $scope.accept();
@@ -71,7 +71,7 @@ angular.module('oncokbApp')
                                 $scope.reject();
                                 break;
                             case 'name':
-                                $scope.reject($scope.path);
+                                $scope.reject();
                                 break;
                             case 'delete':
                                 $scope.cancelDelete($scope.adjustedEvidenceType, $scope.mutation, $scope.tumor, $scope.therapyCategory, $scope.treatment, $scope.updatedBy);
@@ -271,7 +271,7 @@ angular.module('oncokbApp')
                         }
                     });
                 }
-                $scope.reject = function(mapPath) {
+                $scope.reject = function() {
                     var dlg = dialogs.confirm('Reminder', 'Are you sure you want to reject this change?');
                     dlg.result.then(function() {
                         numOfReviewItems.minus($scope.updatedBy);
