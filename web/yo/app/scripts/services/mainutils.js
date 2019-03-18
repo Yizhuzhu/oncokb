@@ -664,6 +664,16 @@ angular.module('oncokbApp')
                 return item.indexOf("$") !== 0;
             });
         }
+        function checkDifferenceBetweenTherapies(oldContent, newContent){
+            var oldArray = _.flatten(therapyStrToArr(oldContent));
+            var newArray = _.flatten(therapyStrToArr(newContent));
+            var difference = {
+                'sameDrugs': _.intersection(oldArray, newArray),
+                'extraDrugsInOld': _.difference(oldArray, newArray),
+                'extraDrugsInNew': _.difference(newArray, oldArray)
+            };
+            return difference;
+        }
         return {
             setIsoFormAndGeneType: setIsoFormAndGeneType,
             getCancerTypesName: getCancerTypesName,
@@ -703,6 +713,7 @@ angular.module('oncokbApp')
             therapyStrToArr: therapyStrToArr,
             getDrugNameByUuids: getDrugNameByUuids,
             drugUuidtoName: drugUuidtoName,
-            getKeysWithoutFirebasePrefix: getKeysWithoutFirebasePrefix
+            getKeysWithoutFirebasePrefix: getKeysWithoutFirebasePrefix,
+            checkDifferenceBetweenTherapies: checkDifferenceBetweenTherapies
         };
     });

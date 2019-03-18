@@ -6,7 +6,9 @@ angular.module('oncokbApp')
             restrict: 'E',
             controller: function ($scope) {
                 var drugs = [];
-                var therapyUuid = [];
+                var drugUuids = [];
+                var historicalTherapy = [];
+                var oldContent='';
                 function getDrugList() {
                     var defer = $q.defer();
                     firebaseConnector.ref('Drugs').on('value', function (snapshot) {
@@ -31,7 +33,7 @@ angular.module('oncokbApp')
 
                 function clearData() {
                     $scope.therapy = [[]];
-                    therapyUuid = [[]];
+                    drugUuids = [[]];
                     $scope.addTherapyError = false;
                     $scope.noData = true;
                     $scope.therapyResult = "";
@@ -46,20 +48,20 @@ angular.module('oncokbApp')
                 }
 
                 function initTherapy() {
-                    var newTherapy = [];
-                    newTherapy = mainUtils.therapyStrToArr($scope.treatmentRef.name);
-                    for (var i = 0; i < newTherapy.length; i++) {
+                    oldContent = $scope.treatmentRef.name;
+                    historicalTherapy = mainUtils.therapyStrToArr($scope.treatmentRef.name);
+                    for (var i = 0; i < historicalTherapy.length; i++) {
                         $scope.therapy.push([]);
-                        therapyUuid.push([]);
+                        drugUuids.push([]);
                         var tem = [];
                         var temuuid = [];
-                        for (var j = 0; j < newTherapy[i].length; j++) {
-                            newTherapy[i][j] = newTherapy[i][j].toString();
-                            tem.push($scope.drugList[newTherapy[i][j]]);
-                            temuuid.push($scope.drugList[newTherapy[i][j]].uuid);
+                        for (var j = 0; j < historicalTherapy[i].length; j++) {
+                            historicalTherapy[i][j] = historicalTherapy[i][j].toString();
+                            tem.push($scope.drugList[historicalTherapy[i][j]]);
+                            temuuid.push($scope.drugList[historicalTherapy[i][j]].uuid);
                         }
                         $scope.therapy[i] = tem;
-                        therapyUuid[i] = temuuid;
+                        drugUuids[i] = temuuid;
                     }
                     reformatTherapyResult();
                 }
@@ -74,14 +76,14 @@ angular.module('oncokbApp')
 
                 $scope.addDruginTherapy = function (uuid, index) {
                     $scope.noData = false;
-                    therapyUuid[index].push(uuid);
+                    drugUuids[index].push(uuid);
                     validateTherapies();
                     addTherapy(index);
                 };
 
                 $scope.removeDruginTherapy = function (uuid, index) {
                     $scope.noData = false;
-                    therapyUuid[index].splice(therapyUuid[index].indexOf(uuid), 1);
+                    drugUuids[index].splice(drugUuids[index].indexOf(uuid), 1);
                     validateTherapies();
                     addTherapy(index);
                 };
@@ -89,19 +91,22 @@ angular.module('oncokbApp')
                 function addTherapy(index) {
                     if ($scope.therapy.length === index + 1) {
                         $scope.therapy.push([]);
-                        therapyUuid.push([]);
+                        drugUuids.push([]);
                     }
                 }
 
                 function validateTherapies() {
                     $scope.addTherapyError = false;
                     var therapyVali = [];
-                    therapyUuid.map(function (element) {
+                    drugUuids.map(function (element) {
                         var tem = element.sort().join(' ');
                         if (tem !== '')
                             therapyVali.push(tem);
                     });
-                    if ((_.uniq(therapyVali).length) !== therapyVali.length) {
+                    if (_.isEmpty(therapyVali)) {
+                        $scope.addTherapyError = true;
+                    }
+                    else if ((_.uniq(therapyVali).length) !== therapyVali.length) {
                         $scope.therapyErrorMessage = "Same Elements. Please check and save again.";
                         $scope.addTherapyError = true;
                     }
@@ -111,7 +116,7 @@ angular.module('oncokbApp')
                 $scope.deleteTherapy = function (index) {
                     if (index > 0) {
                         $scope.therapy.splice(index, 1);
-                        therapyUuid.splice(index, 1);
+                        drugUuids.splice(index, 1);
                     }
                     validateTherapies();
                 };
@@ -128,21 +133,29 @@ angular.module('oncokbApp')
                 }
 
                 $scope.save = function () {
-                    therapyUuid = _.filter(therapyUuid, function (item) {
+                    drugUuids = _.filter(drugUuids, function (item) {
                         return item != ''
                     });
                     var therapyString = [];
                     var indices = $scope.indices;
-                    therapyString = _.map(therapyUuid, function (element) {
+                    therapyString = _.map(drugUuids, function (element) {
                         return element.join(' + ').trim();
                     });
                     var newTreatmentName = therapyString.join(', ');
+                    //newTreatmentName, indices,
                     if (isValidTreatment(indices, newTreatmentName)) {
-                        therapyUuid = _.flatten(therapyUuid);
+                        drugUuids = _.flatten(drugUuids);
+                        var therapyObject = {};
                         if ($scope.modifyMode === true) {
                             $scope.gene.mutations[indices[0]].tumors[indices[1]].TIs[indices[2]].treatments[indices[3]].name = newTreatmentName;
                             var name_uuid = $scope.gene.mutations[indices[0]].tumors[indices[1]].TIs[indices[2]].treatments[indices[3]].name_uuid;
                             mainUtils.setUUIDInReview(name_uuid);
+                            therapyObject = {
+                                'name': newTreatmentName,
+                                'status': 'latest'
+                            };
+                            historicalTherapy = _.flatten(historicalTherapy);
+                            $scope.$$prevSibling.changeMapByCurator('name', 'treatment', $scope.path, name_uuid, newTreatmentName, oldContent);
                             $scope.$$prevSibling.indicateTumorContent($scope.tumorRef);
                             $scope.closeWindow();
                         }
@@ -159,6 +172,7 @@ angular.module('oncokbApp')
                             else {
                                 $scope.gene.mutations[indices[0]].tumors[indices[1]].TIs[indices[2]].treatments.push(treatment);
                             }
+                            $scope.changeMapByCurator('add', 'treatment', $scope.path, treatment.name_uuid, treatment.name);
                             $scope.indicateTumorContent($scope.tumorRef);
                             mainUtils.setUUIDInReview(treatment.name_uuid);
                         }

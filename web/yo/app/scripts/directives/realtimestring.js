@@ -176,9 +176,19 @@ angular.module('oncokbApp')
                 $scope.setTrackSignal = function() {
                     mainUtils.updateMovingFlag(false);
                 };
-                $scope.uuidtoName = function(key){
+                $scope.uuidtoName = function(key) {
                     return mainUtils.drugUuidtoName(key, $scope.$parent.drugList);
-                }
+                };
+                // $scope.uuidtoName = function(key, oldKey, uuid){
+                //     if(mainUtils.processedInReview('remove', uuid)){
+                //         //console.log(oldKey);
+                //         return mainUtils.drugUuidtoName(oldKey, $scope.$parent.drugList);
+                //     }
+                //     else{
+                //         console.log(oldKey);
+                //         return mainUtils.drugUuidtoName(key, $scope.$parent.drugList);
+                //     };
+                // }
                 $scope.initializeFE = function() {
                     if ($scope.data[$scope.key+'_editing']) {
                         if ($scope.data[$scope.key+'_editing'] === $rootScope.me.name) {

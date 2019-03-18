@@ -1,12 +1,19 @@
 'use strict';
+/*@Description
+The component is for creating a new drug in Firebase. The curator can search and choose one drug from drop down list (Drugs in the dropdown list are from NCI website) or they can do free text if there is no result.
+* */
 angular.module('oncokbApp')
-    .directive('searchAddDrug', function (DatabaseConnector, dialogs, _, mainUtils, $q, FirebaseModel, firebaseConnector) {
+    .directive('createNewDrug', function (DatabaseConnector, dialogs, _, mainUtils, $q, FirebaseModel, firebaseConnector) {
         return {
-            templateUrl: 'views/searchAddDrug.html',
+            templateUrl: 'views/createNewDrug.html',
             restrict: 'E',
             controller: function ($scope) {
                 function checkSameDrug(drugName, code) {
-                    return _.some(mainUtils.getKeysWithoutFirebasePrefix($scope.drugList), (key) => ((code === '' && drugName === $scope.drugList[key].drugName) || (code !== '' && code === $scope.drugList[key].ncitCode)) === true);
+                    return _.some(mainUtils.getKeysWithoutFirebasePrefix($scope.drugList), function(key){
+                        if(((code === '' && drugName === $scope.drugList[key].drugName) || (code !== '' && code === $scope.drugList[key].ncitCode)) === true){
+                            return key;
+                        }
+                    });
                 }
 
                 function createDrug(drugName, ncitCode, synonyms, ncitName) {
