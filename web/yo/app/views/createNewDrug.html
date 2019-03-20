@@ -11,10 +11,8 @@
         <select chosen
                 ng-model="preferName"
                 data-placeholder="Choose a prefer name or Leave it blank"
-                class="form-control searchbox"
-                data-placeholder="Prefer Name"
-                ng-options="synonyms for synonyms in suggestedDrug.synonyms"
-                class="preferNameDropdown">
+                class="form-control searchbox preferNameDropdown"
+                ng-options="synonyms for synonyms in suggestedDrug.synonyms">
             <option value="suggetedDrug.drugName"></option>
         </select>
     </div>
