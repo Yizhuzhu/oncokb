@@ -1988,15 +1988,15 @@ angular.module('oncokbApp')
                                         });
                                         var name_uuid = $scope.genes[hugoSymbol].mutations[mutationIndex].tumors[tumorTypeIndex].TIs[tiIndex].treatments[treatmentIndex].name_uuid;
                                         var therapyUuids = [];
-                                        // var uuidCombination =  _.map(array, function(subArray){
-                                        //     return _.map(subArray, function(name){
-                                        //         if(findDrugUuid(name) == undefined){
-                                        //             //console.log(name);
-                                        //         };
-                                        //         therapyUuids.push(findDrugUuid(name));
-                                        //         return findDrugUuid(name);
-                                        //     }).join(" + ");
-                                        // }).join((", "));
+                                        var uuidCombination =  _.map(array, function(subArray){
+                                            return _.map(subArray, function(name){
+                                                if(findDrugUuid(name) == undefined){
+                                                    console.log('canot find' + name);
+                                                };
+                                                therapyUuids.push(findDrugUuid(name));
+                                                return findDrugUuid(name);
+                                            }).join(" + ");
+                                        }).join((", "));
                                         var therapyUuids = _.flatten(mainUtils.therapyStrToArr($scope.genes[hugoSymbol].mutations[mutationIndex].tumors[tumorTypeIndex].TIs[tiIndex].treatments[treatmentIndex].name));
                                         var uuidCombination = $scope.genes[hugoSymbol].mutations[mutationIndex].tumors[tumorTypeIndex].TIs[tiIndex].treatments[treatmentIndex].name;
                                         var geneName = $scope.genes[hugoSymbol].name;
@@ -2006,26 +2006,26 @@ angular.module('oncokbApp')
                                         var therapyUuid = $scope.genes[hugoSymbol].mutations[mutationIndex].tumors[tumorTypeIndex].TIs[tiIndex].treatments[treatmentIndex].name_uuid;
                                         var mapPath;
                                         var therapyObject;
-                                        firebaseConnector.once('Meta/' + geneName + '/review/' + therapyUuid).then(function(result){
-                                            if(result == null){
-                                                therapyObject = {
-                                                    'name': uuidCombination,
-                                                    'status': 'reviewed'
-                                                }
-                                            }
-                                            else{
-                                                therapyObject = {
-                                                    'name': uuidCombination,
-                                                    'status': 'latest'
-                                                }
-                                            }
-                                            _.each(therapyUuids, function (drug) {
-                                                mapPath = drug + '/' + geneName + '/' + mutationUuid + '/cancerTypes/' + cancerTypesUuid + '/' + therapyUuid;
-                                                firebaseConnector.setMap(mapPath, therapyObject);
-                                                mapPath = drug + '/' + geneName + '/' + mutationUuid + '/mutationName';
-                                                firebaseConnector.setMap(mapPath, mutationName);
-                                            });
-                                        });
+                                        // firebaseConnector.once('Meta/' + geneName + '/review/' + therapyUuid).then(function(result){
+                                        //     if(result == null){
+                                        //         therapyObject = {
+                                        //             'name': uuidCombination,
+                                        //             'status': 'reviewed'
+                                        //         }
+                                        //     }
+                                        //     else{
+                                        //         therapyObject = {
+                                        //             'name': uuidCombination,
+                                        //             'status': 'latest'
+                                        //         }
+                                        //     }
+                                        //     _.each(therapyUuids, function (drug) {
+                                        //         mapPath = drug + '/' + geneName + '/' + mutationUuid + '/cancerTypes/' + cancerTypesUuid + '/' + therapyUuid;
+                                        //         firebaseConnector.setMap(mapPath, therapyObject);
+                                        //         mapPath = drug + '/' + geneName + '/' + mutationUuid + '/mutationName';
+                                        //         firebaseConnector.setMap(mapPath, mutationName);
+                                        //     });
+                                        // });
                                         //$scope.genes[hugoSymbol].mutations[mutationIndex].tumors[tumorTypeIndex].TIs[tiIndex].treatments[treatmentIndex].name = uuidCombination;
                                     })
                                 })
@@ -2051,6 +2051,7 @@ angular.module('oncokbApp')
                     else {
                         _.each(_.keys($scope.drugList[uuid].synonyms), synonymsIndex => {
                             if($scope.drugList[uuid].synonyms[synonymsIndex].toLowerCase() === name.toLowerCase()){
+                                console.log(name + ':' + $scope.drugList[uuid].drugName)
                                 result = uuid;
                                 return;
                             }
