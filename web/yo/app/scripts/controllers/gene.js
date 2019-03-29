@@ -2061,6 +2061,18 @@ angular.module('oncokbApp')
                     case 'Avapritinib':
                         result = 'C123827';
                         break;
+                    case 'Allogeneic Hematopoietic Cell Transplantation (HCT)':
+                        result = 'C46089';
+                        break;
+                    case 'High dose daunorubicin':
+                        result = 'C62091';
+                        break;
+                    case 'intensive chemotherapy':
+                        result = 'C15807';
+                        break;
+                    case 'Omacetaxine':
+                        result = 'C1127';
+                        break;
                     default:
                         _.each(mainUtils.getKeysWithoutFirebasePrefix($scope.drugList), uuid=> {
                             if($scope.drugList[uuid].drugName.toLowerCase() == name.toLowerCase())
@@ -2071,7 +2083,8 @@ angular.module('oncokbApp')
                             else {
                                 _.each(_.keys($scope.drugList[uuid].synonyms), synonymsIndex => {
                                     if($scope.drugList[uuid].synonyms[synonymsIndex].toLowerCase() === name.toLowerCase()){
-                                        $scope.drugList[uuid].drugName = name;
+                                        console.log(name+':'+$scope.drugList[uuid].drugName);
+                                        //$scope.drugList[uuid].drugName = name;
                                         result = uuid;
                                         return;
                                     }
