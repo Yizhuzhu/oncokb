@@ -218,7 +218,9 @@ angular.module('oncokbApp')
                         "C114984",
                         "C106432",
                         "C98844",
-                        "C82385"]
+                        "C82385",
+                        "C91724"
+                    ];
                     var tem = [];
                     _.each(list, function (code) {
                         DatabaseConnector.searchDrugs(code).then(function (result) {

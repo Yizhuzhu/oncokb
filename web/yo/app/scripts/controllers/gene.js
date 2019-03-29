@@ -1990,15 +1990,15 @@ angular.module('oncokbApp')
                                         var therapyUuids = [];
                                         var uuidCombination =  _.map(array, function(subArray){
                                             return _.map(subArray, function(name){
-                                                if(findDrugUuid(name) == undefined){
+                                                if(findDrugUuid(name) == ''){
                                                     console.log('canot find' + name);
-                                                };
+                                                }
                                                 therapyUuids.push(findDrugUuid(name));
                                                 return findDrugUuid(name);
                                             }).join(" + ");
                                         }).join((", "));
-                                        var therapyUuids = _.flatten(mainUtils.therapyStrToArr($scope.genes[hugoSymbol].mutations[mutationIndex].tumors[tumorTypeIndex].TIs[tiIndex].treatments[treatmentIndex].name));
-                                        var uuidCombination = $scope.genes[hugoSymbol].mutations[mutationIndex].tumors[tumorTypeIndex].TIs[tiIndex].treatments[treatmentIndex].name;
+                                        // var therapyUuids = _.flatten(mainUtils.therapyStrToArr($scope.genes[hugoSymbol].mutations[mutationIndex].tumors[tumorTypeIndex].TIs[tiIndex].treatments[treatmentIndex].name));
+                                        // var uuidCombination = $scope.genes[hugoSymbol].mutations[mutationIndex].tumors[tumorTypeIndex].TIs[tiIndex].treatments[treatmentIndex].name;
                                         var geneName = $scope.genes[hugoSymbol].name;
                                         var mutationUuid = $scope.genes[hugoSymbol].mutations[mutationIndex].name_uuid;
                                         var mutationName = $scope.genes[hugoSymbol].mutations[mutationIndex].name;
@@ -2041,23 +2041,45 @@ angular.module('oncokbApp')
 
 
             function findDrugUuid(name){
-                var result;
-                _.each(mainUtils.getKeysWithoutFirebasePrefix($scope.drugList), uuid=> {
-                    if($scope.drugList[uuid].drugName.toLowerCase() == name.toLowerCase())
-                    {
-                        result = uuid;
-                        return;
-                    }
-                    else {
-                        _.each(_.keys($scope.drugList[uuid].synonyms), synonymsIndex => {
-                            if($scope.drugList[uuid].synonyms[synonymsIndex].toLowerCase() === name.toLowerCase()){
-                                console.log(name + ':' + $scope.drugList[uuid].drugName)
+                var result='';
+                switch (name){
+                    case 'Ado-Trastuzumab Emtansine (T-DM1)':
+                        result = 'C82492';
+                        break;
+                    case 'TKI216':
+                        result = 'C125657';
+                        break;
+                    case 'RG7112':
+                        result = 'C91724';
+                        break;
+                    case 'Radioiodine Uptake Therapy':
+                        result = 'C74052';
+                        break;
+                    case 'GSK343':
+                        result = 'C156804';
+                        break;
+                    case 'Avapritinib':
+                        result = 'C123827';
+                        break;
+                    default:
+                        _.each(mainUtils.getKeysWithoutFirebasePrefix($scope.drugList), uuid=> {
+                            if($scope.drugList[uuid].drugName.toLowerCase() == name.toLowerCase())
+                            {
                                 result = uuid;
                                 return;
                             }
-                        })
-                    }
-                });
+                            else {
+                                _.each(_.keys($scope.drugList[uuid].synonyms), synonymsIndex => {
+                                    if($scope.drugList[uuid].synonyms[synonymsIndex].toLowerCase() === name.toLowerCase()){
+                                        $scope.drugList[uuid].drugName = name;
+                                        result = uuid;
+                                        return;
+                                    }
+                                })
+                            }
+                        });
+                        break;
+                }
                 return result;
             }
 
