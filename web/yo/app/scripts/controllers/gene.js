@@ -1983,29 +1983,37 @@ angular.module('oncokbApp')
                                 _.each(mainUtils.getKeysWithoutFirebasePrefix($scope.genes[hugoSymbol].mutations[mutationIndex].tumors[tumorTypeIndex].TIs), tiIndex => {
                                     _.each(mainUtils.getKeysWithoutFirebasePrefix($scope.genes[hugoSymbol].mutations[mutationIndex].tumors[tumorTypeIndex].TIs[tiIndex].treatments), treatmentIndex => {
                                         name = $scope.genes[hugoSymbol].mutations[mutationIndex].tumors[tumorTypeIndex].TIs[tiIndex].treatments[treatmentIndex].name;
-                                        array = name.split(",").map(function(element){
-                                            return element.trim().split(" + ");
-                                        });
-                                        var name_uuid = $scope.genes[hugoSymbol].mutations[mutationIndex].tumors[tumorTypeIndex].TIs[tiIndex].treatments[treatmentIndex].name_uuid;
-                                        var therapyUuids = [];
-                                        var uuidCombination =  _.map(array, function(subArray){
-                                            return _.map(subArray, function(name){
-                                                if(findDrugUuid(name) == ''){
-                                                    console.log('canot find' + name);
-                                                }
-                                                therapyUuids.push(findDrugUuid(name));
-                                                return findDrugUuid(name);
-                                            }).join(" + ");
-                                        }).join((", "));
+                                        // if (name == 'MOpAD regimen') {
+                                        //     name = 'Methotrexate + Vincristine + Pegylated Recombinant L-asparaginase Erwinia chrysanthemi + Dexamethasone';
+                                        // }
+                                        // array = name.split(",").map(function (element) {
+                                        //     return element.trim().split(" + ");
+                                        // });
+                                        // var name_uuid = $scope.genes[hugoSymbol].mutations[mutationIndex].tumors[tumorTypeIndex].TIs[tiIndex].treatments[treatmentIndex].name_uuid;
+                                        // var therapyUuids = [];
+                                        // var uuidCombination = _.map(array, function (subArray) {
+                                        //     return _.map(subArray, function (name) {
+                                        //         if (findDrugUuid(name) == '') {
+                                        //             console.log('canot find' + name);
+                                        //             console.log(hugoSymbol + ' ' + mutationIndex + ' ' + tumorTypeIndex + ' ' + tiIndex + ' ' + treatmentIndex);
+                                        //         }
+                                        //         therapyUuids.push(findDrugUuid(name));
+                                        //         return findDrugUuid(name);
+                                        //     }).join(" + ");
+                                        // }).join((", "));
+                                        // //console.log(uuidCombination);
+                                        // $scope.genes[hugoSymbol].mutations[mutationIndex].tumors[tumorTypeIndex].TIs[tiIndex].treatments[treatmentIndex].name = uuidCombination;
+
+
                                         // var therapyUuids = _.flatten(mainUtils.therapyStrToArr($scope.genes[hugoSymbol].mutations[mutationIndex].tumors[tumorTypeIndex].TIs[tiIndex].treatments[treatmentIndex].name));
                                         // var uuidCombination = $scope.genes[hugoSymbol].mutations[mutationIndex].tumors[tumorTypeIndex].TIs[tiIndex].treatments[treatmentIndex].name;
-                                        var geneName = $scope.genes[hugoSymbol].name;
-                                        var mutationUuid = $scope.genes[hugoSymbol].mutations[mutationIndex].name_uuid;
-                                        var mutationName = $scope.genes[hugoSymbol].mutations[mutationIndex].name;
-                                        var cancerTypesUuid = $scope.genes[hugoSymbol].mutations[mutationIndex].tumors[tumorTypeIndex].cancerTypes_uuid;
-                                        var therapyUuid = $scope.genes[hugoSymbol].mutations[mutationIndex].tumors[tumorTypeIndex].TIs[tiIndex].treatments[treatmentIndex].name_uuid;
-                                        var mapPath;
-                                        var therapyObject;
+                                        // var geneName = $scope.genes[hugoSymbol].name;
+                                        // var mutationUuid = $scope.genes[hugoSymbol].mutations[mutationIndex].name_uuid;
+                                        // var mutationName = $scope.genes[hugoSymbol].mutations[mutationIndex].name;
+                                        // var cancerTypesUuid = $scope.genes[hugoSymbol].mutations[mutationIndex].tumors[tumorTypeIndex].cancerTypes_uuid;
+                                        // var therapyUuid = $scope.genes[hugoSymbol].mutations[mutationIndex].tumors[tumorTypeIndex].TIs[tiIndex].treatments[treatmentIndex].name_uuid;
+                                        // var mapPath;
+                                        // var therapyObject;
                                         // firebaseConnector.once('Meta/' + geneName + '/review/' + therapyUuid).then(function(result){
                                         //     if(result == null){
                                         //         therapyObject = {
@@ -2043,35 +2051,45 @@ angular.module('oncokbApp')
             function findDrugUuid(name){
                 var result='';
                 switch (name){
-                    case 'Ado-Trastuzumab Emtansine (T-DM1)':
-                        result = 'C82492';
-                        break;
-                    case 'TKI216':
-                        result = 'C125657';
-                        break;
-                    case 'RG7112':
-                        result = 'C91724';
-                        break;
-                    case 'Radioiodine Uptake Therapy':
-                        result = 'C74052';
-                        break;
                     case 'GSK343':
-                        result = 'C156804';
-                        break;
-                    case 'Avapritinib':
-                        result = 'C123827';
+                        //result = 'C156804';
+                        result = 'a91e499a-9164-4141-b79a-54dce3e564e5';
                         break;
                     case 'Allogeneic Hematopoietic Cell Transplantation (HCT)':
-                        result = 'C46089';
-                        break;
-                    case 'High dose daunorubicin':
-                        result = 'C62091';
+                        //result = 'C46089';
+                        result = 'e39ea2bf-65ec-4f4d-a9bf-2349313c4d6c';
                         break;
                     case 'intensive chemotherapy':
-                        result = 'C15807';
+                        //result = 'C15807';
+                        result = '413b42bb-36f1-4a0b-b99e-2d2c5f3e6083';
+                        break;
+                    case 'Avapritinib': //API responce not correct
+                        //result = 'C123827';
+                        result = '6b6bc460-40f3-40ef-9e5a-1ffb04e3d418';
+                        break;
+                    case 'Ado-Trastuzumab Emtansine (T-DM1)':
+                        //result = 'C82492';
+                        result ='741a4e1a-5bcd-4f00-bac1-a4d8a1104d51';
+                        break;
+                    case 'TKI216':
+                        //result = 'C125657';
+                        result = '96ffc7fb-7f65-4c87-9b8e-64a29e26644d';
+                        break;
+                    case 'RG7112':
+                        //result = 'C91724';
+                        result = 'ad398b55-4f0e-42d8-981b-7ad0176f3c8c';
+                        break;
+                    case 'Radioiodine Uptake Therapy':
+                        //result = 'C74052';
+                        result = 'b43b7fab-10a9-468e-8688-17cdc0aeee49';
+                        break;
+                    case 'High dose daunorubicin':
+                        //result = 'C62091';
+                        result = '88f66f1d-7977-4875-89f7-d79985409fe0';
                         break;
                     case 'Omacetaxine':
-                        result = 'C1127';
+                        //result = 'C1127';
+                        result = 'cd1efc20-69df-4726-8af8-1f36c7331b66';
                         break;
                     default:
                         _.each(mainUtils.getKeysWithoutFirebasePrefix($scope.drugList), uuid=> {
