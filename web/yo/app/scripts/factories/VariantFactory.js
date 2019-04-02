@@ -47,7 +47,7 @@ angular.module('oncokbApp').factory('Drugs', ['$http', 'OncoKB', function ($http
     'use strict';
 
     function searchDrugs(keyword) {
-        return $http.get(OncoKB.config.privateApiLink + 'search/drugs?query=' + keyword);
+        return $http.get(OncoKB.config.privateApiLink + 'search/ncitDrugs?query=' + keyword);
     }
 
     return {
