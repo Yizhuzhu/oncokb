@@ -988,6 +988,17 @@ input[type=radio]:checked + label:before, input[type=checkbox]:checked + label:b
     }
 }
 
+.editAlterations {
+    .validClass{
+        text-decoration: none;
+        color: black;
+    }
+    .unvalidClass{
+        //text-decoration: underline;
+        color: red;
+    }
+}
+
 .invalidPubIframe {
     color: red !important;
 }

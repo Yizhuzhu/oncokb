@@ -101,6 +101,53 @@ angular.module('oncokbApp')
                 }
                 return validMutation;
             }
+
+            //modify here
+            // var mutationInput = document.getElementById('mutation-input');
+            // var timeout = null;
+            // mutationInput.onkeyup = function(e){
+            //     clearTimeout(timeout);
+            //     timeout = setTimeout(function(){
+            //         console.log($scope.newMutationName);
+            //         validateMutation($scope.newMutationName);
+            //     }, 500)
+            // }
+            $scope.modifyMutation = function(){
+                var dlgfortherapy = dialogs.create('views/modifyMutation.html', 'ModifyMutationCtrl', {
+                    mutationArray: $scope.mutationArray,
+                    unvalidMutations: $scope.unvalidMutations,
+                    newMutationName: $scope.newMutationName,
+                }, {
+                    size: 'lg'
+                });
+            };
+            $scope.validateMutation = function (newMutationName) {
+                $scope.newMutationName = newMutationName;
+                $scope.validMutation = true;
+                $scope.unvalidMutations = [];
+                $scope.mutationArray = newMutationName.split(', ' || ',');
+                _.each($scope.mutationArray, function (alteration) {
+                    if (!validateAlteration(alteration)) {
+                        $scope.validMutation = false;
+                        $scope.unvalidMutations.push(alteration);
+                    }
+                });
+                $scope.unvalidMutationsString = $scope.unvalidMutations.toString();
+                $scope.alterations = mainUtils.initialComponentsOfAlterations($scope.mutationArray, $scope.unvalidMutations);
+            };
+            function validateAlteration(alteration){
+                var result = true;
+                switch(alteration){
+                    case 'V6000E':
+                    case 'Z600E':
+                        result = false;
+                        break;
+                    default:
+                        break;
+                }
+                return result;
+            }
+            //$scope.openForm
             $scope.addMutation = function (newMutationName) {
                 if (isValidVariant(newMutationName)) {
                     var mutation = new FirebaseModel.Mutation(newMutationName);
@@ -3309,6 +3356,17 @@ angular.module('oncokbApp')
             }
         }]
     )
+
+    .controller('ModifyMutationCtrl', function($scope, $modalInstance, data, _, OncoKB, $rootScope, mainUtils){
+        $scope.unvalidMutations = data.unvalidMutations;
+        $scope.mutationArray = data.mutationArray;
+        $scope.newMutationName = data.newMutationName;
+        $scope.alterations = mainUtils.initialComponentsOfAlterations($scope.mutationArray, $scope.unvalidMutations);
+        $scope.closeWindow = function () {
+            $modalInstance.dismiss('canceled');
+        }
+
+    })
 
     .controller('ModifyTherapyCtrl', function ($scope, $modalInstance, data, _, OncoKB, $rootScope, drugMapUtils, mainUtils) {
         $scope.modifyName = data.modifyName;

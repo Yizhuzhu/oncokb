@@ -644,6 +644,32 @@ angular.module('oncokbApp')
                 console.log(error);
             });
         }
+        function isNumber(c) {
+            return (c>='0'&&c<='9');
+        }
+        function initialComponentsOfAlterations(mutations, unvalidMutations){
+            var alterations = [];
+            _.each(mutations, function(alteration){
+                var i = 1;
+                while(i<alteration.length && isNumber(alteration.substring(i,i+1))){
+                    i++
+                }
+                var alterationComponents={
+                    alterationInput: alteration,
+                    refResidues: alteration.substring(0,1),
+                    proteinStart: alteration.substring(1,i),
+                    variantResidues: alteration.substring(i),
+                    class: ''
+                };
+                if(_.indexOf(unvalidMutations, alteration)>-1){
+                    alterationComponents.class = 'unvalidClass'
+                }else{
+                    alterationComponents.class = 'validClass'
+                }
+                alterations.push(alterationComponents);
+            });
+            return alterations;
+        }
         return {
             setIsoFormAndGeneType: setIsoFormAndGeneType,
             getCancerTypesName: getCancerTypesName,
@@ -679,6 +705,8 @@ angular.module('oncokbApp')
             getTimeStamp: getTimeStamp,
             calculateDiff: calculateDiff,
             getOldGeneType: getOldGeneType,
-            clearCollaboratorsByName: clearCollaboratorsByName
+            clearCollaboratorsByName: clearCollaboratorsByName,
+            initialComponentsOfAlterations: initialComponentsOfAlterations,
+            isNumber: isNumber
         };
     });

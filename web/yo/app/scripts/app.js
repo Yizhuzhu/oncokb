@@ -122,15 +122,15 @@ var oncokbApp = angular.module('oncokbApp', [
             attributePrefix: '$'
         };
 
-        if(OncoKB.config.production) {
-            $provide.decorator('$exceptionHandler', function($delegate, $injector) {
-                return function(exception, cause) {
-                    Sentry.captureException(exception);
-                };
-            });
-
-            $httpProvider.interceptors.push('errorHttpInterceptor');
-        }
+        // if(OncoKB.config.production) {
+        //     $provide.decorator('$exceptionHandler', function($delegate, $injector) {
+        //         return function(exception, cause) {
+        //             Sentry.captureException(exception);
+        //         };
+        //     });
+        //
+        //     $httpProvider.interceptors.push('errorHttpInterceptor');
+        // }
 
         $sceProvider.enabled(false);
     });

@@ -391,14 +391,21 @@
       </div>
     </div>
     <div class="input-group input-group-sm accordionMarginTop" style="float:left" ng-show="!reviewMode && fileEditable">
-      <input type="text" class="form-control" ng-model="newMutationName" placeholder="{{::addMutationPlaceholder}}" uib-typeahead="suggestedMutation for suggestedMutation in suggestedMutations | filter:$viewValue:stateComparator"
-        empty-typeahead ng-click="opened=!opened" focus-me="opened" ng-focus="onFocus($event)" />
+       <span class="input-group-btn">
+        <button class="btn btn-default" ng-disabled="!(!!newMutationName)||validMutation" ng-click="modifyMutation()">
+            Create Mutation Helper
+        </button>
+       </span>
+        <input type="text" class="form-control" ng-model-options="{debounce: 1200}" ng-change="validateMutation(newMutationName)" ng-model="newMutationName" placeholder="{{::addMutationPlaceholder}}" uib-typeahead="suggestedMutation for suggestedMutation in suggestedMutations | filter:$viewValue:stateComparator"
+        empty-typeahead ng-click="opened=!opened" focus-me="opened" ng-focus="onFocus($event)"/>
       <span class="input-group-btn">
-        <button type="button" class="btn btn-default" ng-disabled="!(!!newMutationName)" ng-click="addMutation(newMutationName); newMutationName=''">
+        <button type="button" class="btn btn-default" ng-disabled="!(!!newMutationName)||(!validMutation)" ng-click="addMutation(newMutationName); newMutationName=''">
           <i class="fa fa-plus"></i> Add Mutation
         </button>
       </span>
+
     </div>
+      <edit-alteration ng-hide="hasMutationInput" unvalid-mutations="unvalidMutations" mutation-array="mutationArray" new-mutation-name="newMutationName" alterations="alterations"></edit-alteration>
   </div>
   <div ng-show="!reviewMode" id="vus">
     <br/>

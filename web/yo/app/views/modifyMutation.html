@@ -1,0 +1,15 @@
+<div>
+    <div class="modal-header">
+        <h4 class="modal-title">
+            Create a Mutation</h4>
+    </div>
+    <div class="modal-body">
+        <div>Mutation: {{newMutationName}}</div>
+        <br>
+        <edit-alteration unvalid-mutations="unvalidMutations" mutation-array="mutationArray" new-mutation-name="newMutationName" alterations="alterations"></edit-alteration>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="closeWindow()">Cancel</button>
+        <button type="button" class="btn btn-primary" ng-click="save()" ng-disabled="meta.invalid">Add the Mutation</button>
+    </div>
+</div>

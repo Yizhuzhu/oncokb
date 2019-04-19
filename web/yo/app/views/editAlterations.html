@@ -1,0 +1,23 @@
+<div class="editAlterations">
+<uib-tabset justified="true" active="active">
+    <uib-tab index="$index + 1" ng-repeat="alteration in alterations">
+        <uib-tab-heading class="{{alteration.class}}">
+            <div>
+                <i class="fa fa-exclamation-triangle" ng-show="alteration.class=='unvalidClass'"></i>
+                {{alteration.alterationInput}}
+                <i class="fa fa-trash-o" ng-click="removeAlteration($index)"></i>
+            </div>
+        </uib-tab-heading>
+        <div>Name(search bar): <input type="text" placeholder="Name" ng-model="alteration.alterationInput" ng-change="refreshAlterationInput('alterationInput', alteration, $index)"></div>
+        <div>refResidues: <input type="text" ng-model="alteration.refResidues" ng-change="refreshAlterationInput('refResidues', alteration, $index)"></div>
+        <div>Protein Start: <input type="text" ng-model="alteration.proteinStart" ng-change="refreshAlterationInput('proteinStart', alteration, $index)"></div>
+        <div>Protein End (optional): <input type="text" ng-model="alteration.proteinEnd" ng-change="refreshAlterationInput('proteinEnd', alteration, $index)"></div>
+        <div>VariantResidues: <input type="text" ng-model="alteration.variantResidues" ng-change="refreshAlterationInput('variantResidues', alteration, $index)"></div>
+    </uib-tab>
+    <uib-tab ng-click="addAlteration()">
+        <uib-tab-heading>
+            <i class="fa fa-plus"></i>
+        </uib-tab-heading>
+    </uib-tab>
+</uib-tabset>
+</div>
