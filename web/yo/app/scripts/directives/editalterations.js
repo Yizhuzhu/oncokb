@@ -8,7 +8,8 @@ angular.module('oncokbApp')
                 unvalidMutations: '=',
                 mutationArray: '=',
                 newMutationName: '=',
-                alterations: '='
+                alterations: '=',
+                //saveMutationCallback: '&addMutation',
             },
             controller: function ($scope) {
                 function getComponentsOfAlteration(alteration, index){
@@ -59,7 +60,12 @@ angular.module('oncokbApp')
                         variantResidues: '',
                         valid: true
                     })
-                }
+                };
+                // $scope.addMutation = function (newMutationName) {
+                //     $scope.saveMutationCallback({
+                //         newMutationName: newMutationName
+                //     })
+                // }
             }
         }
     });

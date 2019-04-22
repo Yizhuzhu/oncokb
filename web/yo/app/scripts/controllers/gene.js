@@ -112,17 +112,28 @@ angular.module('oncokbApp')
             //         validateMutation($scope.newMutationName);
             //     }, 500)
             // }
-            $scope.modifyMutation = function(){
+            $scope.modifyMutation = function(name){
+                if(name){
+                    var mutationName = name;
+                    $scope.validateMutation(name);
+                    $scope.newMutationName = '';
+
+                }
+                else {
+                    $scope.newMutationName = $scope.mutationArray.toString(', ');
+                    var mutationName = $scope.newMutationName;
+                }
+
                 var dlgfortherapy = dialogs.create('views/modifyMutation.html', 'ModifyMutationCtrl', {
                     mutationArray: $scope.mutationArray,
                     unvalidMutations: $scope.unvalidMutations,
-                    newMutationName: $scope.newMutationName,
+                    newMutationName: mutationName,
                 }, {
                     size: 'lg'
                 });
             };
             $scope.validateMutation = function (newMutationName) {
-                $scope.newMutationName = newMutationName;
+                //$scope.newMutationName = newMutationName;
                 $scope.validMutation = true;
                 $scope.unvalidMutations = [];
                 $scope.mutationArray = newMutationName.split(', ' || ',');

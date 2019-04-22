@@ -1,5 +1,5 @@
 <div class="editAlterations">
-<uib-tabset justified="true" active="active">
+<uib-tabset justified="true" active="true">
     <uib-tab index="$index + 1" ng-repeat="alteration in alterations">
         <uib-tab-heading class="{{alteration.class}}">
             <div>
@@ -14,9 +14,9 @@
         <div>Protein End (optional): <input type="text" ng-model="alteration.proteinEnd" ng-change="refreshAlterationInput('proteinEnd', alteration, $index)"></div>
         <div>VariantResidues: <input type="text" ng-model="alteration.variantResidues" ng-change="refreshAlterationInput('variantResidues', alteration, $index)"></div>
     </uib-tab>
-    <uib-tab ng-click="addAlteration()">
+    <uib-tab active="false">
         <uib-tab-heading>
-            <i class="fa fa-plus"></i>
+            <i class="fa fa-plus" ng-click="addAlteration()"></i>
         </uib-tab-heading>
     </uib-tab>
 </uib-tabset>

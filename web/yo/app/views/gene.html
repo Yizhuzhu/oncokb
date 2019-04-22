@@ -101,11 +101,13 @@
           <div ng-click="toggleSection(mutation.name_uuid); setSectionOpenStatus('open', [mutation.mutation_effect_uuid])">
             <i ng-class="getAngleClass(mutation.name_uuid)"></i> Mutation:</div>
           <div style="margin-top:-42px;margin-left:100px">
-            <div ng-style="getNameStyle('mutation')"><realtime-string t="'MUTATION_NAME'" key="'name'" path="path" uuid="getUUID({type: 'mutation', key: 'name', path: path})"></realtime-string></div>
+            <div ng-style="getNameStyle('mutation')"><realtime-string t="'MUTATION_NAME'" key="'name'" path="path" uuid="getUUID({type: 'mutation', key: 'name', path: path})"></realtime-string>
+            </div>
             <div style="float:left;" ng-class="mutation.name.length > 80 ? 'levelWithLongName' : 'levelWithoutLongName'" ng-show="!reviewMode">
               <comments-dict key="'name'" path="path"></comments-dict>
               <span style="margin-right:10px" ng-bind-html="mutationContent[mutation.name_uuid].result"></span>
                 <span class="curationNoEntry" ng-if="isEmptySection(mutation, 'mutation')">No Entry</span>
+                <span><i class="fa fa-edit ng-scope" style="margin-top: 5px; margin-left: 5px" ng-click="modifyMutation(mutation.name)"></i></span>
             </div>
             <div ng-show="!reviewMode" style="margin-top:-30px">
               <span style="float:right">
@@ -392,7 +394,7 @@
     </div>
     <div class="input-group input-group-sm accordionMarginTop" style="float:left" ng-show="!reviewMode && fileEditable">
        <span class="input-group-btn">
-        <button class="btn btn-default" ng-disabled="!(!!newMutationName)||validMutation" ng-click="modifyMutation()">
+        <button class="btn btn-default" ng-click="modifyMutation()">
             Create Mutation Helper
         </button>
        </span>
@@ -405,7 +407,7 @@
       </span>
 
     </div>
-      <edit-alteration ng-hide="hasMutationInput" unvalid-mutations="unvalidMutations" mutation-array="mutationArray" new-mutation-name="newMutationName" alterations="alterations"></edit-alteration>
+      <edit-alteration ng-hide="!newMutationName" unvalid-mutations="unvalidMutations" mutation-array="mutationArray" new-mutation-name="newMutationName" alterations="alterations"></edit-alteration>
   </div>
   <div ng-show="!reviewMode" id="vus">
     <br/>
