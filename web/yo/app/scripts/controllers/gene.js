@@ -146,6 +146,9 @@ angular.module('oncokbApp')
                 $scope.unvalidMutationsString = $scope.unvalidMutations.toString();
                 $scope.alterations = mainUtils.initialComponentsOfAlterations($scope.mutationArray, $scope.unvalidMutations);
             };
+            $scope.showEditAlterationsComponent = function (mutation) {
+                $scope.mutation.validateMutationError = true;
+            }
             function validateAlteration(alteration){
                 var result = true;
                 switch(alteration){

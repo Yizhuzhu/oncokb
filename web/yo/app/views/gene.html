@@ -101,13 +101,12 @@
           <div ng-click="toggleSection(mutation.name_uuid); setSectionOpenStatus('open', [mutation.mutation_effect_uuid])">
             <i ng-class="getAngleClass(mutation.name_uuid)"></i> Mutation:</div>
           <div style="margin-top:-42px;margin-left:100px">
-            <div ng-style="getNameStyle('mutation')"><realtime-string t="'MUTATION_NAME'" key="'name'" path="path" uuid="getUUID({type: 'mutation', key: 'name', path: path})"></realtime-string>
+            <div ng-style="getNameStyle('mutation')"><realtime-string t="'MUTATION_NAME'" key="'name'" path="path" uuid="getUUID({type: 'mutation', key: 'name', path: path})" validate-mutation="validateMutation(name)" show-edit-alterations-component="showEditAlterationsComponent(mutation)" modify-error="false"></realtime-string>
             </div>
             <div style="float:left;" ng-class="mutation.name.length > 80 ? 'levelWithLongName' : 'levelWithoutLongName'" ng-show="!reviewMode">
               <comments-dict key="'name'" path="path"></comments-dict>
               <span style="margin-right:10px" ng-bind-html="mutationContent[mutation.name_uuid].result"></span>
                 <span class="curationNoEntry" ng-if="isEmptySection(mutation, 'mutation')">No Entry</span>
-                <span><i class="fa fa-edit ng-scope" style="margin-top: 5px; margin-left: 5px" ng-click="modifyMutation(mutation.name)"></i></span>
             </div>
             <div ng-show="!reviewMode" style="margin-top:-30px">
               <span style="float:right">
@@ -120,6 +119,7 @@
                   </span>
               </span>
             </div>
+
             <div style="margin-top:-20px;margin-bottom:20px">
                 <review-panel hugo-symbol="gene.name" uuid="mutation.name_uuid" review-obj="mutation.name_review" evidence-type="'mutation'" mutation="mutation" get-evidence="getEvidence(type, mutation)" model-update="modelUpdate(type, mutation)"
                               accept-added="acceptAdded(type, mutation, tumor, ti, treatment, updatedBy)" reject-added="rejectAdded(type, mutation, tumor, ti, treatment, updatedBy)"
@@ -391,6 +391,7 @@
           </div>
         </div>
       </div>
+        <edit-alteration ng-show="mutation.validateMutationError" unvalid-mutations="unvalidMutations" mutation-array="mutationArray" new-mutation-name="newMutationName" alterations="alterations"></edit-alteration>
     </div>
     <div class="input-group input-group-sm accordionMarginTop" style="float:left" ng-show="!reviewMode && fileEditable">
        <span class="input-group-btn">

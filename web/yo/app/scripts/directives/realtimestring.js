@@ -20,8 +20,11 @@ angular.module('oncokbApp')
                 uuid: '=',
                 mutation: '=',
                 tumor: '=',
+                modifyError: '=',
                 indicateMutationContentInGene: '&indicateMutationContent',
-                indicateTumorContentInGene: '&indicateTumorContent'
+                indicateTumorContentInGene: '&indicateTumorContent',
+                validateMutationInGene: '&validateMutation',
+                showEditAlterationsComponentInGene: '&showEditAlterationsComponent'
             },
             replace: true,
             link: {
@@ -101,6 +104,10 @@ angular.module('oncokbApp')
                             if ($rootScope.reviewMode) {
                                 scope.calculateDiff();
                             }
+                        }
+                        if(scope.t === 'MUTATION_NAME') {
+                            //scope.modifyError = true;
+                            scope.validateMutation(scope.data[scope.key]);
                         }
                     });
                     $rootScope.$watch('fileEditable', function(n, o) {
@@ -341,6 +348,16 @@ angular.module('oncokbApp')
                         tumor: tumor
                     });
                 };
+                $scope.validateMutation = function(name){
+                    $scope.validateMutationInGene({
+                        name: name
+                    })
+                };
+                $scope.showEditAlterationsComponent = function (mutation) {
+                    $scope.showEditAlterationsComponentInGene({
+                        mutation: mutation
+                    })
+                }
                 $scope.trimCSS = function() {
                     $scope.pasting = true;
                 };
