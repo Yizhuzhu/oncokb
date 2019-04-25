@@ -15,13 +15,22 @@ angular.module('oncokbApp')
                 function getComponentsOfAlteration(alteration, index){
                     $scope.mutationArray[index] = alteration.alterationInput;
                     $scope.newMutationName = $scope.mutationArray.toString(', ');
-                    alteration.refResidues = alteration.alterationInput.substring(0,1);
+
                     var i = 1;
                     while(i<alteration.alterationInput.length && mainUtils.isNumber(alteration.alterationInput.substring(i,i+1))){
                         i++
                     }
-                    alteration.proteinStart = alteration.alterationInput.substring(1,i);
-                    alteration.variantResidues = alteration.alterationInput.substring(i);
+                    if(i!==1){
+                        alteration.refResidues = alteration.alterationInput.substring(0,1);
+                        alteration.proteinStart = alteration.alterationInput.substring(1,i);
+                        alteration.variantResidues = alteration.alterationInput.substring(i);
+                    }
+                    else {
+                        alteration.refResidues = '';
+                        alteration.proteinStart = '';
+                        alteration.variantResidues = '';
+                    }
+
                 }
                 function updateAlterations(alteration, index){
                     alteration.alterationInput = alteration.refResidues + alteration.proteinStart + alteration.variantResidues;

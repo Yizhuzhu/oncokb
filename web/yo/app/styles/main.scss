@@ -990,11 +990,13 @@ input[type=radio]:checked + label:before, input[type=checkbox]:checked + label:b
 
 .editAlterations {
     .validClass{
+        font-weight: bold;
         text-decoration: none;
         color: black;
     }
     .unvalidClass{
         //text-decoration: underline;
+        font-weight: bold;
         color: red;
     }
 }

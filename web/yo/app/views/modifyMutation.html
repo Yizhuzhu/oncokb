@@ -1,15 +1,15 @@
 <div>
     <div class="modal-header">
         <h4 class="modal-title">
-            Create a Mutation</h4>
+            Modify the Mutation</h4>
     </div>
     <div class="modal-body">
-        <div>Mutation: {{newMutationName}}</div>
+        <div><b>Mutation:  </b> <input style="width:80%" type="text" ng-model-options="{debounce: 1200}" ng-model="newMutationName" ng-change="validateMutation(newMutationName)"></div>
         <br>
         <edit-alteration unvalid-mutations="unvalidMutations" mutation-array="mutationArray" new-mutation-name="newMutationName" alterations="alterations"></edit-alteration>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-default" ng-click="closeWindow()">Cancel</button>
-        <button type="button" class="btn btn-primary" ng-click="save(newMutationName)" ng-disabled="meta.invalid">Add the Mutation</button>
+        <button type="button" class="btn btn-primary" ng-disabled="!(!!newMutationName)||(!validMutation)" ng-click="save(newMutationName)" ng-disabled="meta.invalid">Save the Mutation</button>
     </div>
 </div>

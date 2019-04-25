@@ -654,13 +654,23 @@ angular.module('oncokbApp')
                 while(i<alteration.length && isNumber(alteration.substring(i,i+1))){
                     i++
                 }
-                var alterationComponents={
-                    alterationInput: alteration,
-                    refResidues: alteration.substring(0,1),
-                    proteinStart: alteration.substring(1,i),
-                    variantResidues: alteration.substring(i),
-                    class: ''
-                };
+                if(i == 1){
+                    var alterationComponents = {
+                        alterationInput: alteration,
+                        refResidues: '',
+                        proteinStart: '',
+                        variantResidues: '',
+                        class:''
+                    }
+                }else{
+                    var alterationComponents={
+                        alterationInput: alteration,
+                        refResidues: alteration.substring(0,1),
+                        proteinStart: alteration.substring(1,i),
+                        variantResidues: alteration.substring(i),
+                        class: ''
+                    }
+                }
                 if(_.indexOf(unvalidMutations, alteration)>-1){
                     alterationComponents.class = 'unvalidClass'
                 }else{

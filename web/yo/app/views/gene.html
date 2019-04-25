@@ -107,6 +107,7 @@
               <comments-dict key="'name'" path="path"></comments-dict>
               <span style="margin-right:10px" ng-bind-html="mutationContent[mutation.name_uuid].result"></span>
                 <span class="curationNoEntry" ng-if="isEmptySection(mutation, 'mutation')">No Entry</span>
+                <i class="fa fa-edit ng-scope" style="margin-top: 5px; margin-left: 5px" ng-click="modifyMutation(mutation.name, path)"></i>
             </div>
             <div ng-show="!reviewMode" style="margin-top:-30px">
               <span style="float:right">
@@ -391,14 +392,13 @@
           </div>
         </div>
       </div>
-        <edit-alteration ng-show="mutation.validateMutationError" unvalid-mutations="unvalidMutations" mutation-array="mutationArray" new-mutation-name="newMutationName" alterations="alterations"></edit-alteration>
     </div>
     <div class="input-group input-group-sm accordionMarginTop" style="float:left" ng-show="!reviewMode && fileEditable">
-       <span class="input-group-btn">
-        <button class="btn btn-default" ng-click="modifyMutation()">
-            Create Mutation Helper
-        </button>
-       </span>
+       <!--<span class="input-group-btn">-->
+        <!--<button class="btn btn-default" ng-click="modifyMutation()">-->
+            <!--Create Mutation Helper-->
+        <!--</button>-->
+       <!--</span>-->
         <input type="text" class="form-control" ng-model-options="{debounce: 1200}" ng-change="validateMutation(newMutationName)" ng-model="newMutationName" placeholder="{{::addMutationPlaceholder}}" uib-typeahead="suggestedMutation for suggestedMutation in suggestedMutations | filter:$viewValue:stateComparator"
         empty-typeahead ng-click="opened=!opened" focus-me="opened" ng-focus="onFocus($event)"/>
       <span class="input-group-btn">

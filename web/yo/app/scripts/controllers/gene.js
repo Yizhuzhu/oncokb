@@ -112,7 +112,9 @@ angular.module('oncokbApp')
             //         validateMutation($scope.newMutationName);
             //     }, 500)
             // }
-            $scope.modifyMutation = function(name){
+            $scope.modifyMutation = function(name, path){
+                var indices = getIndexByPath(path);
+                var mutationRef = $scope.gene.mutations[indices[0]];
                 if(name){
                     var mutationName = name;
                     $scope.validateMutation(name);
@@ -128,6 +130,7 @@ angular.module('oncokbApp')
                     mutationArray: $scope.mutationArray,
                     unvalidMutations: $scope.unvalidMutations,
                     newMutationName: mutationName,
+                    mutationRef: mutationRef
                 }, {
                     size: 'lg'
                 });
@@ -3376,8 +3379,57 @@ angular.module('oncokbApp')
         $scope.mutationArray = data.mutationArray;
         $scope.newMutationName = data.newMutationName;
         $scope.alterations = mainUtils.initialComponentsOfAlterations($scope.mutationArray, $scope.unvalidMutations);
+        $scope.mutationRef = data.mutationRef;
         $scope.closeWindow = function () {
             $modalInstance.dismiss('canceled');
+        }
+        $scope.saveMutation = function(newMutationName){
+            var name_uuid = $scope.mutationRef.name_uuid;
+            if(isValidVariant(newMutationName)){
+                if(!_.isEmpty($scope.mutationRef.name)) {
+                    if (_.isUndefined($scope.mutationRef.name_review)) {
+                        $scope.mutationRef.name_review = {
+                            'updatedBy' : $rootScope.me.name,
+                            'updateTime':  new Date().getTime(),
+                        };
+                    }
+                    else if (_.isUndefined($scope.mutationRef.name_review.updatedBy) || _.isUndefined($scope.mutationRef.name_review.updateTime)) {
+                        $scope.mutationRef.name_review.updatedBy = $rootScope.me.name;
+                        $scope.mutationRef.name_review.updateTime = new Date().getTime();
+                    }
+                    if (_.isUndefined($scope.mutationRef.name_review.lastReviewed)&&_.isUndefined($scope.mutationRef.name_review.added)) {
+                        $scope.mutationRef.name_review.lastReviewed = $scope.mutationRef.name;
+                    }
+                    mainUtils.setUUIDInReview(name_uuid);
+                }
+                $scope.mutationRef.name = newMutationName;
+            }
+
+        }
+        $scope.validateMutation = function (newMutationName){
+            $scope.validMutation = true;
+            $scope.unvalidMutations = [];
+            $scope.mutationArray = newMutationName.split(', ' || ',');
+            _.each($scope.mutationArray, function (alteration) {
+                if (!validateAlteration(alteration)) {
+                    $scope.validMutation = false;
+                    $scope.unvalidMutations.push(alteration);
+                }
+            });
+            $scope.unvalidMutationsString = $scope.unvalidMutations.toString();
+            $scope.alterations = mainUtils.initialComponentsOfAlterations($scope.mutationArray, $scope.unvalidMutations);
+        }
+        function validateAlteration(alteration){
+            var result = true;
+            switch(alteration){
+                case 'V6000E':
+                case 'Z600E':
+                    result = false;
+                    break;
+                default:
+                    break;
+            }
+            return result;
         }
 
     })

@@ -8,11 +8,11 @@
                 <i class="fa fa-trash-o" ng-click="removeAlteration($index)"></i>
             </div>
         </uib-tab-heading>
-        <div>Name(search bar): <input type="text" placeholder="Name" ng-model="alteration.alterationInput" ng-change="refreshAlterationInput('alterationInput', alteration, $index)"></div>
-        <div>refResidues: <input type="text" ng-model="alteration.refResidues" ng-change="refreshAlterationInput('refResidues', alteration, $index)"></div>
-        <div>Protein Start: <input type="text" ng-model="alteration.proteinStart" ng-change="refreshAlterationInput('proteinStart', alteration, $index)"></div>
-        <div>Protein End (optional): <input type="text" ng-model="alteration.proteinEnd" ng-change="refreshAlterationInput('proteinEnd', alteration, $index)"></div>
-        <div>VariantResidues: <input type="text" ng-model="alteration.variantResidues" ng-change="refreshAlterationInput('variantResidues', alteration, $index)"></div>
+        <div style="padding: 10px"><b>Name: </b><input type="text" placeholder="Name" ng-model="alteration.alterationInput" ng-change="refreshAlterationInput('alterationInput', alteration, $index)"></div>
+        <div style="padding: 10px"><b>refResidues: </b><input type="text" ng-model="alteration.refResidues" ng-change="refreshAlterationInput('refResidues', alteration, $index)"></div>
+        <div style="padding: 10px"><b>Protein Start: </b><input type="text" ng-model="alteration.proteinStart" ng-change="refreshAlterationInput('proteinStart', alteration, $index)"></div>
+        <div style="padding: 10px"><b>Protein End (optional): </b><input type="text" ng-model="alteration.proteinEnd" ng-change="refreshAlterationInput('proteinEnd', alteration, $index)"></div>
+        <div style="padding: 10px"><b>VariantResidues: </b><input type="text" ng-model="alteration.variantResidues" ng-change="refreshAlterationInput('variantResidues', alteration, $index)"></div>
     </uib-tab>
     <uib-tab>
         <uib-tab-heading>
