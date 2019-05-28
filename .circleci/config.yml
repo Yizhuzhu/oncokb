@@ -30,11 +30,11 @@ jobs:
 
       - run:
             name:  "install npm"
-            command: sudo npm install npm@6.10.3
+            command: sudo npm install npm@6.9.0
 
       - run:
             name: "install bower"
-            command: sudo npm install bower@1.8.8
+            command: sudo npm install bower
 
       - run:
             name: "install yo"
