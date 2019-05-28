@@ -59,7 +59,7 @@ jobs:
             name: "install karma-cli"
             command: sudo npm install karma-cli
 
-      # run tests!
-      - run:
-            name: "Karma start"
-            command: karma start
+      #run tests!
+#      - run:
+#            name: "Karma start"
+#            command: karma start
