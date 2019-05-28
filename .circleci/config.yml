@@ -29,12 +29,27 @@ jobs:
       - checkout
 
       - run:
+            name:  "install npm"
+            command: sudo npm install npm@6.10.3
+
+      - run:
+            name: "install bower"
+            command: sudo npm install bower@1.8.8
+
+      - run:
+            name: "install yo"
+            command: sudo npm install yo
+      - run:
+            name: "install grunt-cli"
+            command: npm install grunt-cli
+
+      - run:
             name: "npm install"
-            command: sudo npm install
+            command: npm install
 
       - run:
             name: "bower install"
-            command: sudo bower install
+            command: bower install
 
       # run tests!
       - run:
