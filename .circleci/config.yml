@@ -41,7 +41,7 @@ jobs:
             command: sudo npm install yo
       - run:
             name: "install grunt-cli"
-            command: npm install grunt-cli
+            command: sudo npm install grunt-cli
 
       - run:
             name: "npm install"
