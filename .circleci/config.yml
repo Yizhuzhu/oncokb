@@ -49,7 +49,7 @@ jobs:
 
       - run:
             name: "bower install"
-            command: sudo bower install
+            command: bower install
 
       # run tests!
       - run:
