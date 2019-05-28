@@ -47,6 +47,14 @@ jobs:
             name: "npm install"
             command: sudo npm install
 
+      - run:
+            name: "install karma"
+            command: sudo npm install karma --save-dev
+
+      - run:
+            name: "install karma plugins"
+            command: sudo npm install karma-jasmine karma-chrome-launcher jasmine-core --save-dev
+
       # run tests!
       - run:
             name: "Karma start"
