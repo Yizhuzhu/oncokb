@@ -47,10 +47,6 @@ jobs:
             name: "npm install"
             command: sudo npm install
 
-      - run:
-            name: "bower install"
-            command: bower install
-
       # run tests!
       - run:
             name: "Karma start"
