@@ -289,19 +289,19 @@ var OncoKB = {
     }
 };
 OncoKB.config = {
-    "apiLink": "",
-    "curationLink": "",
-    "privateApiLink": "",
-    "publicApiLink": "",
+    "apiLink": "http://dashi-dev.cbio.mskcc.org:8080/oncokb_drug/legacy-api/",
+    "curationLink": "http://dashi-dev.cbio.mskcc.org:8080/oncokb_drug/legacy-api/",
+    "privateApiLink": "http://dashi-dev.cbio.mskcc.org:8080/oncokb_drug/api/private/",
+    "publicApiLink": "http://dashi-dev.cbio.mskcc.org:8080/oncokb_drug/api/v1/",
     "testing": true,
     "production": false,
     "firebaseConfig": {
-        "apiKey": "",
-        "authDomain": "",
-        "databaseURL": "",
-        "projectId": "",
-        "storageBucket": "",
-        "messagingSenderId": ""
+        "apiKey": "AIzaSyCOgmLbmZtP4wIHncjogVUQCKjFqqjV7tc",
+        "authDomain": "testonco-5ca82.firebaseapp.com",
+        "databaseURL": "https://testonco-5ca82.firebaseio.com",
+        "projectId": "testonco-5ca82",
+        "storageBucket": "testonco-5ca82.appspot.com",
+        "messagingSenderId": "252736157027"
     }
 };
 function getString(string) {
